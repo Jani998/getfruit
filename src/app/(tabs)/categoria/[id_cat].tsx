@@ -7,7 +7,7 @@ import { supabase } from '../../../lib/supabase'
 import { ProdutoCard } from '@/src/components/ProdutoCard'
 import { useCartContext } from '@/src/hooks/use-cart-context'
 import { Produto } from '@/src/types'
-import Paginas from '../../../components/paginas'
+import { Icon } from 'react-native-paper'
 import Procurar from "../../../components/procurar"
 
 export default function Categoria() {
@@ -27,7 +27,7 @@ export default function Categoria() {
     const { data, error } = await supabase
       .from('produtos')       
       .select('*')
-      .eq('id_cat', categoriaId)  // filtra produtos onde id_cat = categoria pressionada
+      .eq('id_cat', categoriaId)
 
     if (error) console.error(error)
     if (data) setProdutos(data)
@@ -40,10 +40,13 @@ export default function Categoria() {
   return (
     <SafeAreaView style={styles.container}>    
       <Procurar />
-      <Paginas />
       <View style={styles.header}>
-        <Pressable onPress={() => router.back()}>
-          <Text style={styles.back}>←</Text>
+        <Pressable
+          onPress={() => router.back()}
+          style={styles.backRow}
+        >
+          <Icon source="chevron-left" size={20} color="#111" />
+          <Text style={styles.back}>Voltar</Text>
         </Pressable>
       </View>
       <FlatList
@@ -54,6 +57,9 @@ export default function Categoria() {
         )}
         contentContainerStyle={{paddingVertical: 12}}
         />
+
+
+        
     </SafeAreaView>
   )
 }
@@ -62,10 +68,17 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f5f5f0' },
   header: {
   paddingHorizontal: 16,
-  paddingVertical: 10,
+  marginVertical:5,
 },
 
-back: {
-  fontSize: 22,
+backRow: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  gap: 4, // ou marginLeft: 4 no Text se `gap` não servir na tua versão
 },
+back: {
+  fontSize: 16,
+  color: '#111',
+  fontWeight: '500',
+}
 })

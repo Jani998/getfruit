@@ -1,7 +1,7 @@
-// app/(tabs)/perfil.tsx
 import { useEffect, useState } from 'react'
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+
 import { useAuthContext } from '../../hooks/use-auth-context'
 import { supabase } from '../../lib/supabase'
 
