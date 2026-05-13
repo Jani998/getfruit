@@ -37,7 +37,16 @@ export default function Notificacoes() {
   }
 }
 
-
+if (!notificacoes.length) {
+    return (
+      <SafeAreaView style={styles.container}>
+          <Text style={styles.titulo}>Notificações</Text>
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>Não tem notificações.</Text>
+        </View>
+      </SafeAreaView>
+    )
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -61,21 +70,62 @@ export default function Notificacoes() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f5f5f0' },
-  titulo: { fontSize: 18, fontWeight: '500', padding: 16 },
+  container: { 
+    flex: 1, 
+    backgroundColor: '#f5f5f0' 
+  },
+  titulo: { 
+    fontSize: 18, 
+    fontWeight: '500', 
+    padding: 16 },
   card: {
-    flexDirection: 'row', alignItems: 'flex-start',
-    backgroundColor: '#fff', borderRadius: 12,
-    padding: 12, marginHorizontal: 16, marginBottom: 8,
-    borderWidth: 0.5, borderColor: '#e8e8e8', gap: 10,
+    flexDirection: 'row', 
+    alignItems: 'flex-start',
+    backgroundColor: '#fff', 
+    borderRadius: 12,
+    padding: 12, 
+    marginHorizontal: 16, 
+    marginBottom: 8,
+    borderWidth: 0.5, 
+    borderColor: '#e8e8e8', 
+    gap: 10,
   },
   dot: {
-    width: 8, height: 8, borderRadius: 4,
-    backgroundColor: '#1D9E75', marginTop: 4, flexShrink: 0,
+    width: 8, 
+    height: 8, 
+    borderRadius: 4,
+    backgroundColor: '#1D9E75', 
+    marginTop: 4, 
+    flexShrink: 0,
   },
-  dotLida: { backgroundColor: '#ddd' },
-  info: { flex: 1 },
-  nome: { fontSize: 13, fontWeight: '500', color: '#111' },
-  corpo: { fontSize: 12, color: '#888', marginTop: 2 },
-  tempo: { fontSize: 11, color: '#bbb', marginTop: 3 },
+  dotLida: { 
+    backgroundColor: '#ddd' 
+  },
+  info: { 
+    flex: 1 
+  },
+  nome: { 
+    fontSize: 13, 
+    fontWeight: '500', 
+    color: '#111' 
+  },
+  corpo: { 
+    fontSize: 12, 
+    color: '#888', 
+    marginTop: 2 
+  },
+  tempo: { 
+    fontSize: 11, 
+    color: '#bbb', 
+    marginTop: 3 },
+
+  emptyContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyText: {
+    fontSize: 16,
+    color: '#666',
+  },
 })

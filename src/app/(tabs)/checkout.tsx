@@ -123,7 +123,7 @@ export default function Checkout() {
           </View>
           {items.map((item) => (
             <View key={item.id_produto} style={styles.itemRow}>
-              <Image source={{ uri: item.imagem }} style={styles.itemImg} />
+              <Image source={{ uri: item.imagem ?? '' }} style={styles.itemImg} />
               <View style={styles.itemInfo}>
                 <Text style={styles.fornecedor}>Fornecedor</Text>
                 <Text style={styles.itemNome}>{item.nome}</Text>
@@ -163,7 +163,7 @@ export default function Checkout() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f5f5f0' },
   
-  topbar: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff', paddingVertical: 12, borderBottomWidth: 0.5, borderBottomColor: '#e8e8e8' },
+  topbar: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center',  paddingVertical: 12, borderBottomWidth: 0.5, borderBottomColor: '#e8e8e8' },
   backBtn: { position: 'absolute', left: 16 },
   backText: { fontSize: 22, color: '#111' },
   titulo: { fontSize: 16, fontWeight: '500', color: '#111' },

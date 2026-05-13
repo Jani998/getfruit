@@ -10,23 +10,68 @@ export default function Registo() {
     const [nome, setNome] = useState('');
     const [loading, setLoading]   = useState(false);
 
-    async function SignUpWithEmail () {
-        setLoading(true);
+    const [erro, setErro] = useState<string | null>(null)
+    const [erroNome, setErroNome] = useState<string | null>(null)
+    const [erroEmail, setErroEmail] = useState<string | null>(null)
+    const [erroPassword, setErroPassword] = useState<string | null>(null)
 
-        const {error} = await supabase.auth.signUp({
-            email: email,
-            password: password,
-            options: {
-                data: {
-                    username: nome
-                }
-            }
-        });
-        if (error) {
-            console.log("Erro ao tentar registar", error.message);
-        }
-        setLoading(false);
+    async function SignUpWithEmail() {
+      setErro(null)
+      setErroNome(null)
+      setErroEmail(null)
+      setErroPassword(null)
+
+      const nomeOk = nome.trim()
+      if (!nomeOk) {
+        setErroNome('Indique o username.')
         return
+      }
+
+      const emailOk = email.trim()
+      if (!emailOk) {
+        setErroEmail('Indique o email.')
+        return
+      }
+      
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailOk)) {
+        setErroEmail('Email inválido.')
+        return
+      }
+      if (!password) {
+        setErroPassword('Indique a password.')
+        return
+      }
+      if (password.length < 6) {
+        setErroPassword('A password deve ter pelo menos 6 caracteres.')
+        return
+      }
+      setLoading(true)
+      try {
+        const { error } = await supabase.auth.signUp({
+          email: emailOk,
+          password,
+          options: {
+            data: { username: nomeOk },
+          },
+        })
+        if (error) {
+          const msg = error.message.toLowerCase()
+          if (msg.includes('already registered') || msg.includes('user already')) {
+            setErro('Este email já está registado.')
+          } else if (msg.includes('password')) {
+            setErroPassword(error.message)
+          } else if (msg.includes('email')) {
+            setErroEmail(error.message)
+          } else {
+            setErro(error.message)
+          }
+          return
+        }
+        setErro(null)
+        
+      } finally {
+        setLoading(false)
+      }
     }
 
     // OAUth Google
@@ -74,16 +119,25 @@ export default function Registo() {
   
             <TextInput
               style={styles.input}
-              onChangeText={(text) => setNome(text)}
+              onChangeText={(text) => {
+                setNome(text)
+                setErroNome(null)
+                setErro(null)
+              }}
               value={nome}
               placeholder="username"
               placeholderTextColor="#aaa"
               autoCapitalize="none"
             />
+            {erroNome ? <Text style={styles.erro}>{erroNome}</Text> : null}
 
             <TextInput
               style={styles.input}
-              onChangeText={(text) => setEmail(text)}
+              onChangeText={(text) => {
+                setEmail(text)
+                setErroEmail(null)
+                setErro(null)
+              }}
               value={email}
               placeholder="email@dominio.pt"
               autoCapitalize="none"
@@ -92,10 +146,15 @@ export default function Registo() {
               autoCorrect={false}
               textContentType="emailAddress"
             />
+            {erroEmail ? <Text style={styles.erro}>{erroEmail}</Text> : null}
 
             <TextInput
               style={styles.input}
-              onChangeText={(text) => setPassword(text)}
+              onChangeText={(text) => {
+                setPassword(text)
+                setErroPassword(null)
+                setErro(null)
+              }}
               value={password}
               secureTextEntry
               placeholder="password"
@@ -103,10 +162,13 @@ export default function Registo() {
               autoCapitalize="none"
               textContentType="password"
             />
-
+            {erroPassword ? <Text style={styles.erro}>{erroPassword}</Text> : null}
+            
+            {erro ? <Text style={styles.erro}>{erro}</Text> : null}
             <TouchableOpacity style={[styles.botaoContinuar, loading && styles.btnDisabled]}
                 disabled={loading}
-                onPress={() => SignUpWithEmail()}>              
+                onPress={() => SignUpWithEmail() }>    
+                      
               <Text style={styles.botaoContinuarText}>Continuar</Text>
             </TouchableOpacity>
   
@@ -260,5 +322,12 @@ export default function Registo() {
     },
     legalLink: { 
       color: '#555', 
-      textDecorationLine: 'underline' },
+      textDecorationLine: 'underline' 
+    },
+    erro: {
+      alignSelf: 'stretch',
+      color: '#b91c1c',
+      marginBottom: 10,
+      fontSize: 13,
+    },
   });

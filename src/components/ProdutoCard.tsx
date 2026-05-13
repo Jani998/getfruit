@@ -6,11 +6,11 @@ export function ProdutoCard({ item, onAdd }: { item: Produto, onAdd: (item: Prod
     <View style={styles.card}>
       <Image source={{ uri: item.imagem ?? '' }} style={styles.imagem} />
       <View style={styles.info}>
-        <Text style={styles.nome}>{item.nome}</Text>
-        <Text style={styles.sub}>Qtd. disponível: {item.quantidade} · {item.unidade}</Text>
+        <Text style={styles.texto}>{item.nome}</Text>
+        <Text style={styles.qtd}>Qtd. disponível: {item.quantidade} · {item.unidade}</Text>
       </View>
       <View style={styles.right}>
-        <Text style={styles.preco}>{item.preco.toFixed(2)}€</Text>
+        <Text style={styles.texto}>{item.preco.toFixed(2)}€</Text>
         <Pressable style={styles.addBtn} onPress={() => onAdd(item)}>
           <Text style={styles.addBtnText}>+</Text>
         </Pressable>
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
     borderRadius: 12,
-    padding: 12,
+    padding: 10,
     marginHorizontal: 16,
     marginBottom: 10,
     borderWidth: 0.5,
@@ -33,19 +33,19 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   imagem: {
-    width: 56,
-    height: 56,
+    width: 60,
+    height: 60,
     borderRadius: 8,
   },
   info: {
     flex: 1,
   },
-  nome: {
+  texto: {
     fontSize: 15,
     fontWeight: '500',
     color: '#111',
   },
-  sub: {
+  qtd: {
     fontSize: 13,
     color: '#888',
     marginTop: 2,
@@ -54,16 +54,12 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     gap: 8,
   },
-  preco: {
-    fontSize: 15,
-    fontWeight: '500',
-    color: '#111',
-  },
+  
   addBtn: {
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#808483',
+    backgroundColor: '#0f0e0e',
     alignItems: 'center',
     justifyContent: 'center',
   },

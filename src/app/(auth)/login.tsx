@@ -9,17 +9,53 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const [loading, setLoading]   = useState(false);
 
-    async function SignInWithEmail () {
-        setLoading(true);
-        const {error} = await supabase.auth.signInWithPassword({
-            email: email,
-            password: password,
-        });
+    const [erro, setErro] = useState<string | null>(null)
+    const [erroEmail, setErroEmail] = useState<string | null>(null)
+    const [erroPassword, setErroPassword] = useState<string | null>(null)
+    
+
+    async function SignInWithEmail() {
+      setErro(null)
+      setErroEmail(null)
+      setErroPassword(null)
+      const emailOk = email.trim()
+      if (!emailOk) {
+        setErroEmail('Indique o email.')
+        return
+      }
+      // validação simples de formato (opcional)
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailOk)) {
+        setErroEmail('Email inválido.')
+        return
+      }
+      if (!password) {
+        setErroPassword('Indique a password.')
+        return
+      }
+      if (password.length < 6) {
+        setErroPassword('A password deve ter pelo menos 6 caracteres.')
+        return
+      }
+      setLoading(true)
+      try {
+        const { error } = await supabase.auth.signInWithPassword({
+          email: emailOk,
+          password,
+        })
         if (error) {
-            console.log("Erro ao tentar entrar", error.message);
+          setErro(
+            error.message === 'Invalid login credentials'
+              ? 'Email ou password incorretos.'
+              : error.message
+          )
+          return
         }
-        setLoading(false);
+        setErro(null)
+      } finally {
+        setLoading(false)
     }
+  }
+    
 
     // OAUth Google
       const handleGoogleAuth = async () => {
@@ -35,7 +71,7 @@ export default function Login() {
         } finally {
           setLoading(false);
         }
-      };
+      }
     
       // OAUth Apple
       const handleAppleAuth = async () => {
@@ -51,7 +87,9 @@ export default function Login() {
         } finally {
           setLoading(false);
         }
-      };
+      }
+    
+    
 
     
 
@@ -66,7 +104,11 @@ export default function Login() {
   
             <TextInput
               style={styles.input}
-              onChangeText={(text) => setEmail(text)}
+              onChangeText={(text) => {
+                setEmail(text)
+                setErroEmail(null)
+                setErro(null)
+              }}
               value={email}
               placeholder="email@dominio.pt"
               autoCapitalize="none"
@@ -75,10 +117,15 @@ export default function Login() {
               autoCorrect={false}
               textContentType="emailAddress"
             />
+            {erroEmail ? <Text style={styles.erro}>{erroEmail}</Text> : null}
 
             <TextInput
               style={styles.input}
-              onChangeText={(text) => setPassword(text)}
+              onChangeText={(text) => {
+                setPassword(text)
+                setErroPassword(null)
+                setErro(null)
+              }}
               value={password}
               secureTextEntry
               placeholder="password"
@@ -86,7 +133,9 @@ export default function Login() {
               autoCapitalize="none"
               textContentType="password"
             />
+            {erroPassword ? <Text style={styles.erro}>{erroPassword}</Text> : null}
 
+            {erro ? <Text style={styles.erro}>{erro}</Text> : null}
             <TouchableOpacity style={[styles.botaoContinuar, loading && styles.btnDisabled]}
                 disabled={loading}
                 onPress={() => SignInWithEmail()}>              
@@ -94,55 +143,54 @@ export default function Login() {
             </TouchableOpacity>
   
             
-              <Pressable onPress={() => router.replace('/(auth)/registo')}>
-                  <Text style={styles.linkRegisto}> Ainda não tem conta. Faça o registo.</Text>
-              </Pressable>
+            <Pressable onPress={() => router.replace('/(auth)/registo')}>
+                <Text style={styles.linkRegisto}> Ainda não tem conta. Faça o registo.</Text>
+            </Pressable>
             
               
             {/* Divisor */}
-                      <View style={styles.dividerRow}>
-                        <View style={styles.dividerLine} />
-                        <Text style={styles.dividerText}>ou</Text>
-                        <View style={styles.dividerLine} />
-                      </View>
+            <View style={styles.dividerRow}>
+              <View style={styles.dividerLine} />
+                <Text style={styles.dividerText}>ou</Text>
+              <View style={styles.dividerLine} />
+            </View>
             
-                      {/* Google */}
-                      <TouchableOpacity
-                        style={styles.btnSocial}
-                        onPress={handleGoogleAuth}
-                        disabled={loading}
-                        activeOpacity={0.85}
-                      >
-                        <Image 
-                            source={require('../../../assets/images/LoginGoogle.png')}
-                            style={styles.socialIcon} />
-                        <Text style={styles.btnSocialText}>Continuar com Google</Text>
-                      </TouchableOpacity>
+            {/* Auth Google */}
+            <TouchableOpacity
+              style={styles.btnSocial}
+              onPress={handleGoogleAuth}
+              disabled={loading}
+              activeOpacity={0.85}
+            >
+              <Image 
+                source={require('../../../assets/images/LoginGoogle.png')}
+                style={styles.socialIcon} />
+              <Text style={styles.btnSocialText}>Continuar com Google</Text>
+            </TouchableOpacity>
             
-                      {/* Apple */}
-                      <TouchableOpacity
-                        style={styles.btnSocial}
-                        onPress={handleAppleAuth}
-                        disabled={loading}
-                        activeOpacity={0.85}
-                      >
-                        <Image
-                        source={require('../../../assets/images/LoginApple.png')}
-                        style={styles.socialIcon} />
-                        <Text style={styles.btnSocialText}>Continuar com Apple</Text>
-                      </TouchableOpacity>
+            {/* Auth Apple */}
+            <TouchableOpacity
+              style={styles.btnSocial}
+              onPress={handleAppleAuth}
+              disabled={loading}
+              activeOpacity={0.85}
+            >
+              <Image
+                source={require('../../../assets/images/LoginApple.png')}
+                style={styles.socialIcon} />
+              <Text style={styles.btnSocialText}>Continuar com Apple</Text>
+            </TouchableOpacity>
             
-                      {/* Nota legal */}
-                      <Text style={styles.legalText}>
-                        Ao pressionar continuar, está a concordar com os nossos{' '}
-                        <Text style={styles.legalLink}>Termos de Serviço</Text>
-                        {' '}e{' '}
-                        <Text style={styles.legalLink}>Política de Privacidade</Text>
-                      </Text>
-        </SafeAreaView>
-  
-            
-  )}
+            {/* Nota Legal */}
+            <Text style={styles.legalText}>
+                Ao pressionar continuar, está a concordar com os nossos{' '}
+              <Text style={styles.legalLink}>Termos de Serviço</Text>
+                {' '}e{' '}
+              <Text style={styles.legalLink}>Política de Privacidade</Text>
+            </Text>
+        </SafeAreaView>   
+  )
+}
   
   const styles = StyleSheet.create({
     
@@ -243,5 +291,12 @@ export default function Login() {
     },
     legalLink: { 
       color: '#555', 
-      textDecorationLine: 'underline' },
+      textDecorationLine: 'underline' 
+    },
+    erro: {
+      alignSelf: 'stretch',
+      color: '#b91c1c',
+      marginBottom: 10,
+      fontSize: 13,
+    },
   });

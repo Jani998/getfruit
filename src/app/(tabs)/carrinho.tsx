@@ -20,22 +20,15 @@ export default function Carrinho() {
   return (
     <SafeAreaView style={styles.container}>
       
-        <Text style={styles.titulo}>Carrinho</Text>
-        
-
+    <Text style={styles.titulo}>Carrinho</Text>
       
-
-
-      
-
-
       <FlatList
         data={items}
         keyExtractor={(item) => item.id_produto.toString()}
         contentContainerStyle={{paddingVertical: 12}}
         renderItem={({ item }) => (
           <View style={styles.card}>
-            <Image source={{ uri: item.imagem }} style={styles.imagem} />
+            <Image source={{ uri: item.imagem ?? '' }} style={styles.imagem} />
             <View style={styles.info}>
               <Text style={styles.nome}>{item.nome}</Text>
               <Text style={styles.precoUnitario}>{item.preco.toFixed(2)}€ / {item.unidade}</Text>

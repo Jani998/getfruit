@@ -5,7 +5,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { ProdutoCard } from "@/src/components/ProdutoCard";
 import { useCartContext } from "@/src/hooks/use-cart-context";
-import Paginas from '../../components/paginas';
 import Procurar from "../../components/procurar";
 import { useAuthContext } from "../../hooks/use-auth-context";
 import { supabase } from '../../lib/supabase';
@@ -44,19 +43,34 @@ export default function Index() {
         console.error('Erro ao buscar top produtos:', error)
         return
       }
-      setTopProdutos(data ?? [])
-    }
+
+      const rows = data ?? []
+
+      const mapped: TopProduto[] = rows.map((row: any) => ({
+        total_vendido: Number(row.total_vendido),
+        produto: {
+        id_produto: row.id_produto,
+        nome: row.nome,
+        preco: Number(row.preco),
+        quantidade: Number(row.quantidade),
+        unidade: row.unidade,
+        imagem: row.imagem,
+        id_cat: row.id_cat,
+        categoria: '', // ou buscar/join na SQL se precisares do nome real
+        },
+  }))
+  setTopProdutos(mapped)
+  //console.log('topProdutos count:', mapped.length, mapped)
+}
 
   return ( 
    
     <SafeAreaView style={styles.container}>
+      
       <Procurar />
-      <Paginas />
-
       
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Categorias</Text>
-          
         </View>
         <View>
             <FlatList
@@ -85,22 +99,19 @@ export default function Index() {
         </View>
 
 
-        <View>
+        <View style={{flex:1}}>
             <FlatList
             data={topProdutos}
-            showsHorizontalScrollIndicator={false}
-            horizontal
-            keyExtractor={(item) => item.id_produto.toString()}
+            keyExtractor={(item) => item.produto.id_produto.toString()}
             renderItem={({ item }) => (
-                <View style={styles.item}>
-                        
+                <View>   
                   <ProdutoCard item={item.produto}
                     onAdd={(p) => addItem(p)}/>  
                 </View>
             )}
         />
         </View> 
-
+    
     </SafeAreaView>
   );
 
@@ -139,9 +150,9 @@ nomeCategoria: {
 
   sectionHeader: {
     flexDirection: 'row',
-    alignItems: 'center',
+    
     paddingHorizontal: 16,
-    marginBottom: 12,
+    marginBottom: 14,
   },
   sectionTitle: { 
     fontWeight: '700', 

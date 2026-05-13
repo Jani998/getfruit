@@ -5,7 +5,6 @@ export interface Produto {
     quantidade: number
     unidade: string
     imagem: string | null
-    categoria: string
     id_cat: number
 }
 
@@ -39,7 +38,6 @@ export interface Notificacao {
 }
 
 export interface TopProduto {
-    id_produto: number
     total_vendido: number
     produto: Produto
 
