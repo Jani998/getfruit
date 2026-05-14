@@ -4,7 +4,7 @@ import { Produto } from '../types'
 export function ProdutoCard({ item, onAdd }: { item: Produto, onAdd: (item: Produto) => void }) {
   return (
     <View style={styles.card}>
-      <Image source={{ uri: item.imagem ?? '' }} style={styles.imagem} />
+      <Image source={item.imagem ? {uri: item.imagem } : require('../../assets/images/nao_disponivel.jpg') } style={styles.imagem} />
       <View style={styles.info}>
         <Text style={styles.texto}>{item.nome}</Text>
         <Text style={styles.qtd}>Qtd. disponível: {item.quantidade} · {item.unidade}</Text>

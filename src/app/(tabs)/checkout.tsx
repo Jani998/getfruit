@@ -105,7 +105,7 @@ export default function Checkout() {
               <Text style={styles.rowValue}>Grátis</Text>
               <Text style={styles.rowSub}>3-4 dias</Text>
             </View>
-            <Text style={styles.arrow}>›</Text>
+            
           </View>
 
           <View style={styles.row}>
@@ -123,9 +123,9 @@ export default function Checkout() {
           </View>
           {items.map((item) => (
             <View key={item.id_produto} style={styles.itemRow}>
-              <Image source={{ uri: item.imagem ?? '' }} style={styles.itemImg} />
+              <Image source={item.imagem ? {uri: item.imagem } : require('../../../assets/images/nao_disponivel.jpg') } style={styles.itemImg} />
               <View style={styles.itemInfo}>
-                <Text style={styles.fornecedor}>Fornecedor</Text>
+                
                 <Text style={styles.itemNome}>{item.nome}</Text>
                 <Text style={styles.itemQty}>Quantidade: {String(item.quantidadeCarrinho).padStart(2, '0')}</Text>
               </View>

@@ -28,10 +28,10 @@ export default function Carrinho() {
         contentContainerStyle={{paddingVertical: 12}}
         renderItem={({ item }) => (
           <View style={styles.card}>
-            <Image source={{ uri: item.imagem ?? '' }} style={styles.imagem} />
+            <Image source={item.imagem ? {uri: item.imagem } : require('../../../assets/images/nao_disponivel.jpg') } style={styles.imagem} />
             <View style={styles.info}>
               <Text style={styles.nome}>{item.nome}</Text>
-              <Text style={styles.precoUnitario}>{item.preco.toFixed(2)}€ / {item.unidade}</Text>
+              <Text style={styles.precoUnitario}>{item.preco.toFixed(2)}€/{item.unidade}</Text>
             </View>
 
             <View style={styles.actions}>
@@ -56,12 +56,10 @@ export default function Carrinho() {
         <Text style={styles.totalItens}>{totalItens} item(ns)</Text>
         <Text style={styles.total}>Total: {total.toFixed(2)}€</Text>
       </View>
-
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 16, marginBottom: 8 }}>
-        <Pressable onPress={clearCart}>
-          <Text style={styles.clearText}>Limpar carrinho</Text>
-        </Pressable>
-      </View>
+      {/*
+      <TouchableOpacity style={styles.botaoLimpar} onPress={() => {clearCart}}>
+        <Text style={styles.botaoContinuarText}>Limpar carrinho</Text>
+      </TouchableOpacity>*/}
 
       <TouchableOpacity style={styles.botaoContinuar} onPress={() => router.push('/(tabs)/checkout')}>
         <Text style={styles.botaoContinuarText}>Proceder para checkout</Text>
@@ -90,7 +88,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 12,
   },
+  botaoLimpar: {
+    height: 48, 
+      backgroundColor: '#ca5757',
+      borderRadius: 8, 
+      alignItems: 'center', 
+      justifyContent: 'center', 
+      marginBottom: 10,
+      marginHorizontal: 16
 
+  },
   botaoContinuar: {
       
       height: 48, 
@@ -167,6 +174,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   footer: {
+    marginBottom: 16,
     marginHorizontal:16,
     borderTopWidth: 0.5,
     borderTopColor: '#ddd',

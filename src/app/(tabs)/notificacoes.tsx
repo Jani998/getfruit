@@ -47,7 +47,7 @@ if (!notificacoes.length) {
       </SafeAreaView>
     )
   }
-
+  
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.titulo}>Notificações</Text>
